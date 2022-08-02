@@ -9,10 +9,19 @@ class InMemoryUserRepository implements UserRepository {
   }
 }
 
+function makeSut() {
+  const userRepository = new InMemoryUserRepository();
+  const sut = new RegisterUserUseCase(userRepository);
+
+  return {
+    sut,
+    userRepository,
+  };
+}
+
 describe('UserRegisterUseCase', () => {
   it('should be able to register a user', async () => {
-    const userRepository = new InMemoryUserRepository();
-    const sut = new RegisterUserUseCase(userRepository);
+    const { sut } = makeSut();
     const user = await sut.execute({
       name: 'John Doe',
       username: 'john.doe',
@@ -22,15 +31,15 @@ describe('UserRegisterUseCase', () => {
   });
 
   it('should not be able to register with an invalid email', async () => {
-    const userRepository = new InMemoryUserRepository();
-    const sut = new RegisterUserUseCase(userRepository);
+    const { sut } = makeSut();
+    const userWithInvalidEmail = {
+      email: 'invalid_email',
+      name: 'John Doe',
+      username: 'john.doe',
+    };
 
     try {
-      await sut.execute({
-        email: 'invalid_email',
-        name: 'John Doe',
-        username: 'john.doe',
-      });
+      await sut.execute(userWithInvalidEmail);
       throw new Error('It should had failed');
     } catch (error) {
       expect(error).toBeInstanceOf(InvalidEmailError);
