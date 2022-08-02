@@ -4,7 +4,8 @@
     "module": "commonjs",
     "baseUrl": ".",
     "paths": {
-      "@entities/*": ["src/domain/entities/*"]
+      "@entities/*": ["src/domain/entities/*"],
+      "@repositories/*": ["src/domain/repositories/*"]
     },
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,

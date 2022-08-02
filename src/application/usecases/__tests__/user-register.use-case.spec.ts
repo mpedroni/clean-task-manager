@@ -1,8 +1,5 @@
-import { User } from '@entities/user.entity';
-import {
-  UserCreateDTO,
-  UserRepository,
-} from '../../../domain/repositories/user.repository';
+import { InvalidEmailError, User } from '@entities/user.entity';
+import { UserCreateDTO, UserRepository } from '@repositories/user.repository';
 import { RegisterUserUseCase } from '../user-register.use-case';
 
 class InMemoryUserRepository implements UserRepository {
@@ -22,5 +19,21 @@ describe('UserRegisterUseCase', () => {
       email: 'john.doe@email.com',
     });
     expect(user.id).toBeTruthy();
+  });
+
+  it('should not be able to register with an invalid email', async () => {
+    const userRepository = new InMemoryUserRepository();
+    const sut = new RegisterUserUseCase(userRepository);
+
+    try {
+      await sut.execute({
+        email: 'invalid_email',
+        name: 'John Doe',
+        username: 'john.doe',
+      });
+      throw new Error('It should had failed');
+    } catch (error) {
+      expect(error).toBeInstanceOf(InvalidEmailError);
+    }
   });
 });
