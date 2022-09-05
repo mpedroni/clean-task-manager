@@ -1,5 +1,5 @@
 type UserProps = {
-  id: string;
+  id?: string;
   name: string;
   username: string;
   email: string;
@@ -15,19 +15,25 @@ export class InvalidEmailError extends Error {
 export class InvalidUsernameError extends Error {
   constructor(message: string = 'Invalid username') {
     super(message);
-    this.name = 'InvalidEmailError';
+    this.name = 'InvalidUsernameError';
+  }
+}
+
+export class InvalidNameError extends Error {
+  constructor(message: string = 'Invalid name') {
+    super(message);
+    this.name = 'InvalidNameError';
   }
 }
 
 export class User {
   private props: UserProps;
 
-  constructor({ id, name, username, email }: UserProps) {
+  constructor({ id = '', name, username, email }: UserProps) {
     this.props = {
       id,
-      name,
-      username,
     } as UserProps;
+    this.name = name;
     this.username = username;
     this.email = email;
   }
@@ -43,11 +49,22 @@ export class User {
   }
 
   get id(): string {
-    return this.props.id;
+    return this.props.id as string;
+  }
+
+  private set id(id: string) {
+    this.props.id = id || '';
   }
 
   get name(): string {
     return this.props.name;
+  }
+
+  set name(name: string) {
+    if (!name.trim())
+      throw new InvalidNameError("The user name could't be empty.");
+
+    this.props.name = name;
   }
 
   get username(): string {
@@ -57,6 +74,12 @@ export class User {
   set username(username: string) {
     if (!username.trim())
       throw new InvalidUsernameError("The username couldn't be empty.");
+
+    if (username.length < 3)
+      throw new InvalidUsernameError(
+        'The username must have at least 3 characters.',
+      );
+
     this.props.username = username;
   }
 

@@ -1,5 +1,6 @@
 import {
   InvalidEmailError,
+  InvalidNameError,
   InvalidUsernameError,
   User,
 } from '@entities/user.entity';
@@ -47,7 +48,7 @@ describe('UserRegisterUseCase', () => {
     );
   });
 
-  it('should not be able to register with an invalid username', async () => {
+  it('should throw an error if the username is empty', async () => {
     const { sut } = makeSut();
     const userWithInvalidUsername = {
       email: 'john.doe@email.com',
@@ -57,6 +58,32 @@ describe('UserRegisterUseCase', () => {
 
     await expect(sut.execute(userWithInvalidUsername)).rejects.toThrowError(
       InvalidUsernameError,
+    );
+  });
+
+  it('should throw an error if the username has less than 3 characters', async () => {
+    const { sut } = makeSut();
+    const userWithInvalidUsername = {
+      email: 'john.doe@email.com',
+      name: 'John Doe',
+      username: '12',
+    };
+
+    await expect(sut.execute(userWithInvalidUsername)).rejects.toThrowError(
+      InvalidUsernameError,
+    );
+  });
+
+  it('should throw an error if the name is empty', async () => {
+    const { sut } = makeSut();
+    const userWithInvalidName = {
+      email: 'john.doe@email.com',
+      name: '',
+      username: 'john.doe',
+    };
+
+    await expect(sut.execute(userWithInvalidName)).rejects.toThrowError(
+      InvalidNameError,
     );
   });
 });
