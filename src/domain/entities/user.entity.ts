@@ -1,5 +1,5 @@
 type UserProps = {
-  id?: string;
+  id: string;
   name: string;
   username: string;
   email: string;
@@ -29,10 +29,9 @@ export class InvalidNameError extends Error {
 export class User {
   private props: UserProps;
 
-  constructor({ id = '', name, username, email }: UserProps) {
-    this.props = {
-      id,
-    } as UserProps;
+  constructor({ id, name, username, email }: UserProps) {
+    this.props = {} as UserProps;
+    this.id = id;
     this.name = name;
     this.username = username;
     this.email = email;
@@ -49,11 +48,11 @@ export class User {
   }
 
   get id(): string {
-    return this.props.id as string;
+    return this.props.id;
   }
 
   private set id(id: string) {
-    this.props.id = id || '';
+    this.props.id = id;
   }
 
   get name(): string {
