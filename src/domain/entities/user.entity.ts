@@ -13,30 +13,40 @@ export class InvalidEmailError extends Error {
 }
 
 export class User {
-  readonly id: string;
-  name: string;
-  username: string;
-  private _email: string = '';
+  private props: UserProps;
 
   constructor({ id, name, username, email }: UserProps) {
-    this.id = id;
-    this.name = name;
-    this.username = username;
+    this.props = {
+      id,
+      name,
+      username,
+    } as UserProps;
     this.email = email;
   }
 
   get email(): string {
-    return this._email;
+    return this.props.email;
   }
 
   set email(email: string) {
-    console.log({ email, valid: this.validateEmail(email) });
-    const isValidEmail = this.validateEmail(email);
+    const isValidEmail = this.isValidEmail(email);
     if (!isValidEmail) throw new InvalidEmailError();
-    this._email = email;
+    this.props.email = email;
   }
 
-  private validateEmail(v: string) {
+  get id(): string {
+    return this.props.id;
+  }
+
+  get name(): string {
+    return this.props.name;
+  }
+
+  get username(): string {
+    return this.props.username;
+  }
+
+  private isValidEmail(v: string) {
     let regex = new RegExp(/^(.+)@(.+)$/);
     return regex.test(v);
   }
