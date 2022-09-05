@@ -12,6 +12,13 @@ export class InvalidEmailError extends Error {
   }
 }
 
+export class InvalidUsernameError extends Error {
+  constructor(message: string = 'Invalid username') {
+    super(message);
+    this.name = 'InvalidEmailError';
+  }
+}
+
 export class User {
   private props: UserProps;
 
@@ -21,6 +28,7 @@ export class User {
       name,
       username,
     } as UserProps;
+    this.username = username;
     this.email = email;
   }
 
@@ -44,6 +52,12 @@ export class User {
 
   get username(): string {
     return this.props.username;
+  }
+
+  set username(username: string) {
+    if (!username.trim())
+      throw new InvalidUsernameError("The username couldn't be empty.");
+    this.props.username = username;
   }
 
   private isValidEmail(v: string) {

@@ -1,4 +1,8 @@
-import { InvalidEmailError, User } from '@entities/user.entity';
+import {
+  InvalidEmailError,
+  InvalidUsernameError,
+  User,
+} from '@entities/user.entity';
 import { UserCreateDTO, UserRepository } from '@repositories/user.repository';
 import { RegisterUserUseCase } from '../user-register.use-case';
 
@@ -40,6 +44,19 @@ describe('UserRegisterUseCase', () => {
 
     await expect(sut.execute(userWithInvalidEmail)).rejects.toThrowError(
       InvalidEmailError,
+    );
+  });
+
+  it('should not be able to register with an invalid username', async () => {
+    const { sut } = makeSut();
+    const userWithInvalidUsername = {
+      email: 'john.doe@email.com',
+      name: 'John Doe',
+      username: '',
+    };
+
+    await expect(sut.execute(userWithInvalidUsername)).rejects.toThrowError(
+      InvalidUsernameError,
     );
   });
 });
