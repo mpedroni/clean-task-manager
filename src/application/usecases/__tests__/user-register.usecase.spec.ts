@@ -1,6 +1,6 @@
 import { User } from '@entities/user.entity';
 import { UserCreateDTO, UserRepository } from '@repositories/user.repository';
-import { RegisterUserUseCase } from '../user-register.use-case';
+import { RegisterUserUseCase } from '../user-register.usecase';
 
 class InMemoryUserRepository implements UserRepository {
   async create({ email, name, username }: UserCreateDTO): Promise<User> {
