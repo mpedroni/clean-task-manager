@@ -38,11 +38,8 @@ describe('UserRegisterUseCase', () => {
       username: 'john.doe',
     };
 
-    try {
-      await sut.execute(userWithInvalidEmail);
-      throw new Error('It should had failed');
-    } catch (error) {
-      expect(error).toBeInstanceOf(InvalidEmailError);
-    }
+    await expect(sut.execute(userWithInvalidEmail)).rejects.toThrowError(
+      InvalidEmailError,
+    );
   });
 });
